@@ -1,6 +1,4 @@
-// Guestbook.js
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Guestbook.css';
 
 const Guestbook = () => {
@@ -8,17 +6,41 @@ const Guestbook = () => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
 
+  // Fetch data from the backend when the component mounts
+  useEffect(() => {
+    fetch('http://localhost:3000/api/entries')
+      .then((response) => response.json())
+      .then((data) => setEntries(data))
+      .catch((error) => console.error('Error fetching data:', error));
+  }, []);
+
   const handleAddEntry = () => {
     if (name.trim() && message.trim()) {
-      const newEntry = { id: Date.now(), name, message };
-      setEntries([...entries, newEntry]);
+      const newEntry = { name, message };
+
+      // Send the new entry to the backend
+      fetch('http://localhost:3000/api/entries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newEntry),
+      })
+        .then((response) => response.json())
+        .then((data) => setEntries([...entries, data]))
+        .catch((error) => console.error('Error adding entry:', error));
+
       setName('');
       setMessage('');
     }
   };
 
   const handleDeleteEntry = (id) => {
-    setEntries(entries.filter((entry) => entry.id !== id));
+    fetch(`http://localhost:3000/api/entries/${id}`, {
+      method: 'DELETE',
+    })
+      .then(() => setEntries(entries.filter((entry) => entry.id !== id)))
+      .catch((error) => console.error('Error deleting entry:', error));
   };
 
   return (
