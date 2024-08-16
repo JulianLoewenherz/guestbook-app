@@ -27,7 +27,10 @@ const Guestbook = () => {
         body: JSON.stringify(newEntry),
       })
         .then((response) => response.json())
-        .then((data) => setEntries([...entries, data]))
+        .then((data) => {
+          setEntries([...entries, data]);
+          console.log('Entry added:', data); // Debugging log
+        })
         .catch((error) => console.error('Error adding entry:', error));
 
       setName('');
@@ -39,7 +42,10 @@ const Guestbook = () => {
     fetch(`http://localhost:3000/api/entries/${id}`, {
       method: 'DELETE',
     })
-      .then(() => setEntries(entries.filter((entry) => entry.id !== id)))
+      .then(() => {
+        setEntries(entries.filter((entry) => entry._id !== id));
+        console.log('Entry deleted:', id); // Debugging log
+      })
       .catch((error) => console.error('Error deleting entry:', error));
   };
 
@@ -64,10 +70,10 @@ const Guestbook = () => {
       </div>
       <ul className="guestbook-list">
         {entries.map((entry) => (
-          <li key={entry.id} className="guestbook-list-item">
+          <li key={entry._id} className="guestbook-list-item">
             <strong>{entry.name}:</strong>
             <p>{entry.message}</p>
-            <button onClick={() => handleDeleteEntry(entry.id)} className="guestbook-delete-button">Delete</button>
+            <button onClick={() => handleDeleteEntry(entry._id)} className="guestbook-delete-button">Delete</button>
           </li>
         ))}
       </ul>

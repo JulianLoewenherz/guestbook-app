@@ -1,36 +1,70 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const app = express();
-const port = 3000; // You can choose any port
+const port = 3000;
+
+// MongoDB Connection
+mongoose.connect('mongodb+srv://Julian_Loewenherz:T3s2vEffx0qArMgM@guestbook123.wxgll.mongodb.net/guestBook123?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Entry Schema and Model
+const entrySchema = new mongoose.Schema({
+  name: String,
+  message: String,
+});
+
+const Entry = mongoose.model('Entry', entrySchema);
 
 // Middleware
-app.use(cors()); // Allows cross-origin requests from your frontend
-app.use(express.json()); // Parses incoming JSON requests
-
-// Simulated in-memory "database"
-let entries = [
-  { id: 1, name: 'Alice', message: 'Hello, world!' },
-  { id: 2, name: 'Bob', message: 'Hi, everyone!' },
-];
+app.use(cors());
+app.use(express.json());
 
 // GET route to fetch all entries
 app.get('/api/entries', (req, res) => {
-  res.json(entries);
+  console.log('GET request received at /api/entries');
+  Entry.find((err, entries) => {
+    if (err) {
+      console.error('Error fetching entries:', err);
+      return res.status(500).send(err);
+    }
+    res.json(entries);
+  });
 });
 
 // POST route to add a new entry
 app.post('/api/entries', (req, res) => {
-  const newEntry = req.body;
-  newEntry.id = Date.now(); // Assign a unique ID
-  entries.push(newEntry); // Add the new entry to the array
-  res.json(newEntry); // Send the new entry back as the response
+  console.log('POST request received at /api/entries');
+  console.log('Request body:', req.body);
+
+  const newEntry = new Entry(req.body);
+  newEntry.save()
+    .then(savedEntry => res.json(savedEntry))
+    .catch(err => {
+      console.error('Error saving entry:', err);
+      res.status(500).send(err);
+    });
 });
 
 // DELETE route to remove an entry by ID
 app.delete('/api/entries/:id', (req, res) => {
-  const entryId = parseInt(req.params.id);
-  entries = entries.filter((entry) => entry.id !== entryId);
-  res.sendStatus(200); // Send a success status code
+  const entryId = req.params.id;
+  console.log('DELETE request received for id:', entryId);
+
+  Entry.findByIdAndDelete(entryId)
+    .then(() => res.sendStatus(200))
+    .catch(err => {
+      console.error('Error deleting entry:', err);
+      res.status(500).send(err);
+    });
 });
 
 // Starting the server
