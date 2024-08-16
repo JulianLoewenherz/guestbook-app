@@ -1,0 +1,69 @@
+/* Guestbook.css */
+
+.guestbook-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .guestbook-form {
+    margin-bottom: 20px;
+  }
+  
+  .guestbook-input, .guestbook-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .guestbook-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .guestbook-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .guestbook-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .guestbook-list-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+  }
+  
+  .guestbook-list-item:last-child {
+    border-bottom: none;
+  }
+  
+  .guestbook-delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .guestbook-delete-button:hover {
+    background-color: #c82333;
+  }
+  
