@@ -1,11 +1,12 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const app = express();
-const port = 3000;
+const port = 3000; // You can choose any port
 
-// MongoDB Connection
-mongoose.connect('mongodb+srv://Julian_Loewenherz:T3s2vEffx0qArMgM@guestbook123.wxgll.mongodb.net/guestBook123?retryWrites=true&w=majority', {
+// MongoDB Connection using environment variable
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
