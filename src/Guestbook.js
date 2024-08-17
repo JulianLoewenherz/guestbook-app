@@ -6,9 +6,12 @@ const Guestbook = () => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
 
+  // Replace 'http://localhost:3000' with your Heroku backend URL
+  const API_URL = 'https://guestbook-app-backend-afd8f1dcec33.herokuapp.com/api/entries';
+
   // Fetch data from the backend when the component mounts
   useEffect(() => {
-    fetch('http://localhost:3000/api/entries')
+    fetch(API_URL)
       .then((response) => response.json())
       .then((data) => setEntries(data))
       .catch((error) => console.error('Error fetching data:', error));
@@ -19,7 +22,7 @@ const Guestbook = () => {
       const newEntry = { name, message };
 
       // Send the new entry to the backend
-      fetch('http://localhost:3000/api/entries', {
+      fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +32,7 @@ const Guestbook = () => {
         .then((response) => response.json())
         .then((data) => {
           setEntries([...entries, data]);
-          console.log('Entry added:', data); // Debugging log
+          console.log('Entry added:', data);
         })
         .catch((error) => console.error('Error adding entry:', error));
 
@@ -39,12 +42,12 @@ const Guestbook = () => {
   };
 
   const handleDeleteEntry = (id) => {
-    fetch(`http://localhost:3000/api/entries/${id}`, {
+    fetch(`${API_URL}/${id}`, {
       method: 'DELETE',
     })
       .then(() => {
         setEntries(entries.filter((entry) => entry._id !== id));
-        console.log('Entry deleted:', id); // Debugging log
+        console.log('Entry deleted:', id);
       })
       .catch((error) => console.error('Error deleting entry:', error));
   };

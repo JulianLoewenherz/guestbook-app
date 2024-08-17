@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 3000; // You can choose any port
+const port = process.env.PORT || 3000;
 
 // MongoDB Connection using environment variable
 mongoose.connect(process.env.MONGODB_URI, {
@@ -68,7 +68,6 @@ app.delete('/api/entries/:id', (req, res) => {
     });
 });
 
-// Starting the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
