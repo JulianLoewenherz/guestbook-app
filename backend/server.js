@@ -30,16 +30,17 @@ app.use(cors());
 app.use(express.json());
 
 // GET route to fetch all entries
-app.get('/api/entries', (req, res) => {
-  console.log('GET request received at /api/entries');
-  Entry.find((err, entries) => {
-    if (err) {
+app.get('/api/entries', async (req, res) => {
+    console.log('GET request received at /api/entries');
+    try {
+      const entries = await Entry.find();
+      res.json(entries);
+    } catch (err) {
       console.error('Error fetching entries:', err);
-      return res.status(500).send(err);
+      res.status(500).send(err);
     }
-    res.json(entries);
   });
-});
+  
 
 // POST route to add a new entry
 app.post('/api/entries', (req, res) => {
